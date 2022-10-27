@@ -1,40 +1,32 @@
-// Import Modules and set up vars
 require('dotenv').config()
+// Require modules
 const express = require('express')
 const methodOverride = require('method-override')
-const app = express()
-const PORT = process.env.PORT || 3000
 const cors = require('cors')
-
-// connect to database
 const db = require('./models/db')
-db.once('open', () => {
-  console.log('connected to mongo')
-})
+const app = express()
 
-// Initialize View Engine
-app.set('view engine', 'jsx')
-app.engine('jsx', require('jsx-view-engine').createEngine())
-
-// Mount Express Middleware
+// Configure the app (app.set)
+/* Start Config */
+app.use(express.urlencoded({ extended: true })) // This code makes us have req.body <=============
 app.use((req, res, next) => {
   res.locals.data = {}
   next()
-}) // Creates res.locals.data
-
-// Middlewear that needs to be available in my routes controller
-app.use(express.urlencoded({ extended: true })) // Creates req.body
-// right below urlencoded
-
+})
 app.use(cors())
-app.use(express.json())
-app.use(methodOverride('_method')) // Allows us to override methods
-app.use(express.static('public')) // Allows us to have Static Files
+app.engine('jsx', require('jsx-view-engine').createEngine())
+app.set('view engine', 'jsx') // register the jsx view engine
+db.once('open', () => {
+  console.log('connected to MongoDB Atlas')
+})
+/* Start Middleware */
+app.use(methodOverride('_method'))
+app.use(express.static('public'))
+app.use('/fruits', require('./controllers/routeController'))
+app.use('/user', require('./controllers/authController'))
+/* END Middleware */
 
-// Setting up localhost:3000/fruits as the entry for my routes
-app.use('/fruits', require('./controllers/routeController.js')) // Mounts our RESTFUL/INDUCES ROUTES at /fruits
-
-// Listen on PORT
-app.listen(PORT, () => {
-  console.log('We in the building', PORT)
+// Tell the app to listen on a port
+app.listen(3000, () => {
+  console.log('Listening on Port 3000')
 })

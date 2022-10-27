@@ -1,23 +1,41 @@
+///////////////////////////////////////
+// Import Dependencies
+////////////////////////////////////////
+/// /////////////////////////////////////
+// Import Dependencies
+/// /////////////////////////////////////
+const express = require('express')
+const User = require('../models/user')
+const bcrypt = require('bcryptjs')
 
+/// //////////////////////////////////////
+// Create Route
+/// //////////////////////////////////////
+const router = express.Router()
 
-// login
-// POST
-//sending datat to the server
-//sending a username and password 
-//Lokkup ther user in the db --- Mongoose Method .findOne({username: req,body.username})
-//compare the req.body.password or credentials to the pass/cred
-//if they match 
-// ---authenticate the user
+/// //////////////////////////////////////
+// Routes
+/// //////////////////////////////////////
 
-//signup
-//POST
-//sending  a username and password ...more data
+// The SignUp Routes (Get => form, post => submit form)
+router.get('/signup', (req, res) => {
+  res.render('user/SignUp.jsx')
+})
 
-//login View Route
-//GET
+router.post('/signup', (req, res) => {
+  res.send('signup')
+})
 
-//signup  View Route
-//GET
+// The login Routes (Get => form, post => submit form)
+router.get('/login', (req, res) => {
+  res.render('user/Login.jsx')
+})
 
-//logout
-//GET
+router.post('/login', (req, res) => {
+  res.send('login')
+})
+
+/// ///////////////////////////////////////
+// Export the Router
+/// ///////////////////////////////////////
+module.exports = router
